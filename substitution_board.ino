@@ -3,41 +3,44 @@
 #define CLK 9
 #define DIO 8
 
+const int colon = 0b01000000;
+const bool to_show_colon = true;
+const int brightness_level = 7; //max
+
 TM1637Display display(CLK, DIO);
+
+int calculate_output(int num1, int num2){
+  return num1 * 100 + num2;
+}
 
 void setup() {
   Serial.begin(9600);
-  display.setBrightness(3);
-
-  
+  display.setBrightness(brightness_level);  
 }
 
 void loop() {
-  Serial.print("Player in jersey number: ");
-  while (Serial.available() == 0) {
-
-  }
-  int player_in = Serial.parseInt();
-  clearBuffer();
-  
-  Serial.print("Player out jersey number: ");
-  while (Serial.available() == 0) {
-
-  }
+  Serial.print("OUT: ");
+  while (Serial.available() == 0) {}
   int player_out = Serial.parseInt();
-  clearBuffer();
+  clearSerial();
+  
+  Serial.print("IN: ");
+  while (Serial.available() == 0) {}
+  int player_in = Serial.parseInt();
+  clearSerial();
+
   Serial.print("\n");
-  Serial.print(player_in);
-  Serial.print(" : ");
   Serial.print(player_out);
+  Serial.print(" : ");
+  Serial.print(player_in);
   delay(1000);
-  display.showNumberDecEx(player_in * 100 + player_out, 0b11110000, true);
+  int display_output = calculate_output(player_out, player_in);
+  display.showNumberDecEx(display_output, colon, to_show_colon);
 
   delay(5000);
-  display.clear();
 }
 
-void clearBuffer(){
+void clearSerial(){
   while (Serial.available() > 0) {
     Serial.read();
   }
