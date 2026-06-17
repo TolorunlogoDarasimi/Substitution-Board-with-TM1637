@@ -30,8 +30,10 @@ void loop() {
   clearSerial();
 
   Serial.print("\n");
+  Serial.print("out = ");
   Serial.print(player_out);
-  Serial.print(" : ");
+  Serial.print(", ");
+  Serial.print("in = ");
   Serial.print(player_in);
   delay(1000);
   int display_output = calculate_output(player_out, player_in);
